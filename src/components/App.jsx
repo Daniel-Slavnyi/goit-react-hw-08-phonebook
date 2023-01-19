@@ -1,16 +1,19 @@
+import { Route, Routes } from 'react-router-dom';
+import Contacts from './Pages/Layout/Contacts';
+import LayoutM from './Pages/Layout/Layout/Layout';
+import LogIn from './Pages/Layout/LogIn';
+import Register from './Pages/Layout/Register';
+
 export const App = () => {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<LayoutM />}>
+          <Route path="contacts" element={<Contacts />} />
+          <Route path="login" element={<LogIn />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
