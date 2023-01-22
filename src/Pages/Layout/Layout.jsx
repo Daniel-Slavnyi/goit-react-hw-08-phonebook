@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { logOutUser } from 'store/register/register-operetions';
 
 import {
   UserAddOutlined,
@@ -8,10 +9,19 @@ import {
   PoweroffOutlined,
 } from '@ant-design/icons';
 
-import { Breadcrumb, Layout, Menu, theme, Typography, Button } from 'antd';
+import {
+  Breadcrumb,
+  Layout,
+  Menu,
+  theme,
+  Typography,
+  Button,
+  Tooltip,
+} from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-const { Header, Content, Footer, Sider } = Layout;
+
+const { Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
 function getItem(label, key, icon, children) {
@@ -24,11 +34,13 @@ function getItem(label, key, icon, children) {
 }
 
 export default function LayoutM() {
-  const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.register.isLoggedIn);
+  const nameUser = useSelector(state => state.register.user.name);
+  const dispatch = useDispatch();
 
   const items = [
-    getItem(<Link to="/contacts">Contacts</Link>, '1', <ContactsOutlined />),
+    isLoggedIn &&
+      getItem(<Link to="/contacts">Contacts</Link>, '1', <ContactsOutlined />),
     !isLoggedIn &&
       getItem(<Link to="/login">Log in</Link>, '2', <UserOutlined />),
     !isLoggedIn &&
@@ -69,17 +81,20 @@ export default function LayoutM() {
 
         <Menu theme="dark" mode="inline" items={items} />
         {isLoggedIn && (
-          <Button
-            type="primary"
-            icon={<PoweroffOutlined />}
-            style={{
-              marginLeft: '25px',
-              marginTop: '4px',
-            }}
-            onClick={() => {
-              console.log('hello');
-            }}
-          ></Button>
+          <Tooltip title="Exit" placement="right">
+            <Button
+              type="primary"
+              icon={<PoweroffOutlined />}
+              style={{
+                width: 70,
+                marginLeft: '5px',
+                marginTop: '10px',
+              }}
+              onClick={() => {
+                dispatch(logOutUser());
+              }}
+            ></Button>
+          </Tooltip>
         )}
       </Sider>
       <Layout
@@ -88,12 +103,6 @@ export default function LayoutM() {
           background: '#002140',
         }}
       >
-        <Header
-          style={{
-            padding: 0,
-            background: '#7e7d7d',
-          }}
-        />
         <Content
           style={{
             margin: '0 16px',
@@ -111,19 +120,22 @@ export default function LayoutM() {
             >
               User
             </Breadcrumb.Item>
-            <Breadcrumb.Item
-              style={{
-                color: 'white',
-              }}
-            >
-              Bill
-            </Breadcrumb.Item>
+            {isLoggedIn && (
+              <Breadcrumb.Item
+                style={{
+                  color: 'white',
+                }}
+              >
+                {nameUser}
+              </Breadcrumb.Item>
+            )}
           </Breadcrumb>
           <div
             style={{
               padding: 24,
               minHeight: 360,
-              background: colorBgContainer,
+              background: '#a8a6a6',
+              borderRadius: 10,
             }}
           >
             <Outlet />
@@ -135,6 +147,9 @@ export default function LayoutM() {
             justifyContent: 'center',
             alignItems: 'center',
             height: '20px',
+            position: 'fixed',
+            bottom: 0,
+            width: '100%',
           }}
         >
           Phone Book Design ©2023 Created by Danylo Slavnyi
