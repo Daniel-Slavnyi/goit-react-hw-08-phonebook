@@ -1,8 +1,20 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useEffect } from 'react';
+import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from 'store/register/register-operetions';
+
+import {
+  BtnEl,
+  ErrorEl,
+  FormEl,
+  InputEl,
+  LabelEl,
+  SpanEl,
+} from './Login.styled';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useNavigate } from 'react-router-dom';
 
 const schema = Yup.object().shape({
   email: Yup.string().email(),
@@ -16,6 +28,20 @@ const initialValues = {
 
 export default function LogIn() {
   const dispatch = useDispatch();
+  const isUserLogin = useSelector(state => state.register.isLoggedIn);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    AOS.init({
+      duration: 2000,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isUserLogin) {
+      navigate('/contacts');
+    }
+  }, [isUserLogin, navigate]);
 
   const handleSubmit = (values, { resetForm }) => {
     dispatch(loginUser(values));
@@ -23,24 +49,30 @@ export default function LogIn() {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      validationSchema={schema}
-    >
-      <Form>
-        <label>
-          <Field type="email" name="email" />
-          <ErrorMessage name="email" />
-          <span>E-mail</span>
-        </label>
-        <label>
-          <Field type="password" name="password" />
-          <ErrorMessage name="password" />
-          <span>Password</span>
-        </label>
-        <button name="button">Login</button>
-      </Form>
-    </Formik>
+    <>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={schema}
+      >
+        <FormEl data-aos="flip-left" data-aos-easing="ease-out-cubic">
+          <LabelEl>
+            <InputEl type="email" name="email" placeholder=" " required />
+            <SpanEl>E-mail</SpanEl>
+            <ErrorEl>
+              <ErrorMessage name="email" />
+            </ErrorEl>
+          </LabelEl>
+          <LabelEl>
+            <InputEl type="password" name="password" placeholder=" " />
+            <SpanEl>Password</SpanEl>
+            <ErrorEl>
+              <ErrorMessage name="password" />
+            </ErrorEl>
+          </LabelEl>
+          <BtnEl name="button">Login</BtnEl>
+        </FormEl>
+      </Formik>
+    </>
   );
 }

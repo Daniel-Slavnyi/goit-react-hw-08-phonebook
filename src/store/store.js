@@ -27,7 +27,6 @@ export const store = configureStore({
   reducer: {
     contacts: contactsReducer,
     register: persistedReducer,
-    filter: {},
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

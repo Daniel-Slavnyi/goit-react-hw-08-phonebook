@@ -1,12 +1,14 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Space, Spin } from 'antd';
 import { Button, Tooltip } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addNewUser } from 'store/contacts/operations';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+
+import { addNewUser } from 'store/contacts/operations';
 import {
   FormEl,
   InputEl,
@@ -15,20 +17,19 @@ import {
   WrapBtnSpin,
   WrapInputs,
 } from './ContactForm.styled';
-import { Space, Spin } from 'antd';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.contacts.isLoading);
 
   useEffect(() => {
     AOS.init({
       duration: 2000,
     });
   }, []);
-
-  const dispatch = useDispatch();
-  const isLoading = useSelector(state => state.contacts.isLoading);
 
   const stateObj = {
     name: setName,

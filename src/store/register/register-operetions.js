@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 // const usersApi = axios.create({
 //   baseURL: 'https://connections-api.herokuapp.com',
@@ -16,14 +17,26 @@ const token = {
   },
 };
 
+const notifyLogin = () => toast.success('Your enter is succsess');
+
+const notifyErrorLogin = () =>
+  toast.error('Check please if the password or email is correct');
+
+const notifySuccess = () => toast.success('Your register is success');
+
+const notifyError = () =>
+  toast.error('It looks like user is already registered');
+
 export const registerUser = createAsyncThunk(
   'register/registerUser',
   async (objOfData, thunkAPI) => {
     try {
       const { data } = await axios.post('/users/signup', objOfData);
       token.set(data.token);
+      notifySuccess();
       return data;
     } catch (error) {
+      notifyError();
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -35,9 +48,10 @@ export const loginUser = createAsyncThunk(
     try {
       const { data } = await axios.post('/users/login', objOfData);
       token.set(data.token);
-      console.dir(axios);
+      notifyLogin();
       return data;
     } catch (error) {
+      notifyErrorLogin();
       return thunkAPI.rejectWithValue(error.message);
     }
   }

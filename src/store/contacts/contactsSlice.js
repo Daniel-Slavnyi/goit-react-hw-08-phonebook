@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUsers, addNewUser, deleteUser } from './operations';
+import { fetchUsers, addNewUser, deleteUser, ubdateUser } from './operations';
 
 const contactSlice = createSlice({
   name: 'contacts',
@@ -42,6 +42,14 @@ const contactSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
+      })
+      .addCase(ubdateUser.fulfilled, (state, action) => {
+        state.items = state.items.map(user => {
+          if (user.id === action.payload.id) {
+            return action.payload;
+          }
+          return user;
+        });
       });
   },
 });

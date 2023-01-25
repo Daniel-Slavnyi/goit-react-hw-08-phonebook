@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { logOutUser } from 'store/register/register-operetions';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 
+import { logOutUser } from 'store/register/register-operetions';
 import {
   UserAddOutlined,
   ContactsOutlined,
@@ -9,17 +11,7 @@ import {
   PoweroffOutlined,
 } from '@ant-design/icons';
 
-import {
-  Breadcrumb,
-  Layout,
-  Menu,
-  theme,
-  Typography,
-  Button,
-  Tooltip,
-} from 'antd';
-import { Link, Outlet } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Breadcrumb, Layout, Menu, Typography, Button, Tooltip } from 'antd';
 
 const { Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -36,22 +28,25 @@ function getItem(label, key, icon, children) {
 export default function LayoutM() {
   const isLoggedIn = useSelector(state => state.register.isLoggedIn);
   const nameUser = useSelector(state => state.register.user.name);
+  const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
 
   const items = [
     isLoggedIn &&
-      getItem(<Link to="/contacts">Contacts</Link>, '1', <ContactsOutlined />),
+      getItem(
+        <NavLink to="/contacts">Contacts</NavLink>,
+        '1',
+        <ContactsOutlined />
+      ),
     !isLoggedIn &&
-      getItem(<Link to="/login">Log in</Link>, '2', <UserOutlined />),
+      getItem(<NavLink to="/login">Log in</NavLink>, '2', <UserOutlined />),
     !isLoggedIn &&
-      getItem(<Link to="/register">Register</Link>, '3', <UserAddOutlined />),
+      getItem(
+        <NavLink to="/register">Register</NavLink>,
+        '3',
+        <UserAddOutlined />
+      ),
   ];
-
-  const [collapsed, setCollapsed] = useState(false);
-
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   return (
     <Layout
@@ -136,9 +131,13 @@ export default function LayoutM() {
               minHeight: 360,
               background: '#a8a6a6',
               borderRadius: 10,
+              maxWidth: 600,
+              margin: 'auto auto',
             }}
           >
-            <Outlet />
+            <Suspense>
+              <Outlet />
+            </Suspense>
           </div>
         </Content>
         <Footer

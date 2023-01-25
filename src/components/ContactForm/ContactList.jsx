@@ -1,53 +1,31 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
-import { deleteUser } from 'store/contacts/operations';
-import { LiElem, UlElem } from './ContactList.styled';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import ContactItem from './ContactItem';
+import { UlElem } from './ContactList.styled';
 
 export default function ContactList() {
-  const dispatch = useDispatch();
+  const [filter, setFilter] = useState('');
   const users = useSelector(state => state.contacts.items);
 
-  const location = useLocation();
-
-  useEffect(() => {
-    AOS.init({
-      duration: 2000,
-      offset: 20,
-    });
-  }, []);
-
-  const handleDeletUser = id => {
-    dispatch(deleteUser(id));
-  };
+  const filteredUser = users.filter(user =>
+    user.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
+  );
 
   return (
-    <UlElem>
-      {users.map(user => (
-        <LiElem key={user.id} data-aos="zoom-in">
-          <NavLink to={`/contacts/${user.id}`} state={{ from: location }}>
-            <p>
-              {user.name} : {user.number}
-            </p>
-          </NavLink>
-          <Tooltip title="delete" placement="right">
-            <Button
-              type="primary"
-              shape="circle"
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                handleDeletUser(user.id);
-              }}
-            />
-          </Tooltip>
-        </LiElem>
-      ))}
-    </UlElem>
+    <>
+      <input
+        type="text"
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+      />
+      <UlElem>
+        {filteredUser.map(obj => (
+          <ContactItem user={obj} key={obj.id} />
+        ))}
+      </UlElem>
+    </>
   );
 }
