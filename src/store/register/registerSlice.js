@@ -22,7 +22,7 @@ const registerSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.token = action.payload.token;
-        state.error = true;
+        state.isLoggedIn = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.error = action.payload;

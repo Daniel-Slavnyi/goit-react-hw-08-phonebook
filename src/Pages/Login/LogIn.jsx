@@ -15,6 +15,8 @@ import {
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const schema = Yup.object().shape({
   email: Yup.string().email(),
@@ -73,6 +75,18 @@ export default function LogIn() {
           <BtnEl name="button">Login</BtnEl>
         </FormEl>
       </Formik>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
   );
 }

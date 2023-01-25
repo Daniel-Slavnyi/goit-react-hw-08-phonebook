@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 function WidthAuthRedirect(Component, navigateTo) {
   const ProtectedComponent = prop => {
     const token = useSelector(state => state.register.token);
-
+    console.log(token);
     return token !== null ? (
       <Component {...prop} />
     ) : (

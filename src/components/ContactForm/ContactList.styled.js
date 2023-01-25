@@ -68,3 +68,31 @@ export const SpanEl = styled.span`
     color: #1890ff;
   }
 `;
+
+export const FilterLabel = styled.label`
+  position: relative;
+`;
+
+export const FilterInput = styled.input`
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+  outline: transparent;
+  margin: 20px 0 20px 20px;
+`;
+
+export const FilterSpanEl = styled.span`
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transition: all 0.5s ease;
+
+  ${FilterInput}:focus-within + & {
+    transform: translateY(-140%);
+    color: #1890ff;
+  }
+  ${FilterInput}:not(:placeholder-shown) + & {
+    transform: translateY(-140%);
+    color: #1890ff;
+  }
+`;
